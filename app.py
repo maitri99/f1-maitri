@@ -153,12 +153,11 @@ with col1:
         if file_type == 'image':
             image = Image.open(uploaded_file)
             img_array = np.array(image)
-            
-            # Predict
             results = model.predict(img_array, conf=conf_threshold, device=device)
             st.image(results[0].plot(), caption="Digital Steward Analysis", use_container_width=True)
             
             with col2:
+                # For images, we just run it once
                 render_analysis_sidebar(results, "60", 16.2)
 
         elif file_type == 'video':
@@ -168,19 +167,44 @@ with col1:
             cap = cv2.VideoCapture("temp_video.mp4")
             st_frame = st.empty()
             
-            # Progress bar for the steward
+            # 1. Create empty placeholders in col2 BEFORE the loop
+            # This prevents the "Duplicate Key" error
+            with col2:
+                st.header("📊 Digital Steward Review")
+                metric_col_a, metric_col_b = st.columns(2)
+                inf_metric = metric_col_a.empty()
+                fps_metric = metric_col_b.empty()
+                st.markdown("---")
+                decision_area = st.empty()
+                st.markdown("---")
+                # Draw the gauge once here, outside the loop
+                st.write("### Model Reliability")
+                fig = go.Figure(go.Indicator(mode="gauge+number", value=92, title={'text': "mAP Score (%)"}))
+                st.plotly_chart(fig, use_container_width=True, key="video_gauge")
+
             while cap.isOpened():
                 ret, frame = cap.read()
                 if not ret: break
                 
                 results = model.predict(frame, conf=conf_threshold, device=device, verbose=False)
                 
+                # Update Video Frame
                 res_plotted = cv2.cvtColor(results[0].plot(), cv2.COLOR_BGR2RGB)
                 st_frame.image(res_plotted, use_container_width=True)
                 
-                with col2:
-                    # Update metrics and check for persistent penalties
-                    render_analysis_sidebar(results, "60", 16.2)
+                # 2. Update ONLY the text/metrics inside the placeholders
+                inf_metric.metric(label="Inference", value="16.2ms")
+                fps_metric.metric(label="System FPS", value="60")
+                
+                # Update Penalty Logic
+                for box in results[0].boxes:
+                    if int(box.cls[0]) == 1:
+                        st.session_state.penalty_detected = True
+                
+                if st.session_state.penalty_detected:
+                    decision_area.error("🚨 VIOLATION DETECTED")
+                else:
+                    decision_area.success("✅ CLEAN RACING")
             
             cap.release()
             os.remove("temp_video.mp4")
