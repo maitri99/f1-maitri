@@ -1,13 +1,18 @@
-ultralytics
-opencv-python
-matplotlib
-seaborn
-pyyaml
-tensorboard
-pandas
-pillow
-tqdm
-ipywidgets
+# Core Web Framework
+streamlit==1.54.0
+
+# Computer Vision & AI
+ultralytics==8.4.14
+opencv-python-headless  # Better for cloud/server environments
 torch
 torchvision
+
+# Data & Visualization
+pandas
+numpy
+matplotlib
+seaborn
+pillow
+
+# Hardware/System
 psutil
