@@ -139,7 +139,7 @@ def render_analysis_sidebar(results, fps_estimate, inference_time):
             'steps': [{'range': [0, 85], 'color': 'lightgray'}]}))
     
     fig.update_layout(height=250, margin=dict(l=20, r=20, t=50, b=20), paper_bgcolor="#0e1117", font={'color': "white"})
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, use_container_width=True, key="steward_gauge")
 
 # --- MAIN EXECUTION LOOP ---
 col1, col2 = st.columns([2, 1])
