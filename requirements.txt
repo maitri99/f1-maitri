@@ -1,18 +1,22 @@
-# Core Web Framework
+# Core Framework
 streamlit==1.54.0
 
-# Computer Vision & AI
+# Visualization
+plotly
+matplotlib
+seaborn
+
+# AI & Computer Vision
 ultralytics==8.4.14
-opencv-python-headless  # Better for cloud/server environments
+opencv-python-headless
 torch
 torchvision
 
-# Data & Visualization
+# Data & F1 Specifics
 pandas
 numpy
-matplotlib
-seaborn
+fastf1
 pillow
 
-# Hardware/System
+# System
 psutil
