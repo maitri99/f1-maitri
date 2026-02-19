@@ -30,6 +30,7 @@ def load_model():
 model = load_model()
 
 # --- CSS STYLING ---
+
 st.markdown("""
     <style>
     .main {
@@ -41,7 +42,7 @@ st.markdown("""
         border-radius: 10px;
     }
     </style>
-    """, unsafe_allow_value=True)
+    """, unsafe_allow_html=True) # Fixed: unsafe_allow_html
 
 # --- SIDEBAR ---
 st.sidebar.image("https://www.formula1.com/etc/designs/fom-website/images/f1_logo.svg", width=100)
